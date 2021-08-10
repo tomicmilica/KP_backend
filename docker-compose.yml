@@ -1,0 +1,34 @@
+version: '3'
+services:
+  backend:
+    build: .
+    command: npm run dev
+    volumes:
+      - .:/usr/src/app
+      - exclude:/usr/src/app/node_modules
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_USER: milica
+      DATABASE_PASSWORD: Milly987!
+      DATABASE_NAME: mydatabase
+      DATABASE_HOST: database
+      DATABASE_PORT: 3306
+    depends_on:
+      - database
+    command: "dockerize -wait tcp://database:3306 -timeout 300s -wait-retry-interval 3s npm run start:dev"
+
+  database:
+    image: mysql
+    volumes:
+      - ./environment/database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Milly987!
+      MYSQL_USER: milica
+      MYSQL_PASSWORD: Milly987!
+      MYSQL_DATABASE: mydatabase
+    ports:
+      - 3360:3306
+
+volumes:
+  exclude:
