@@ -1,5 +1,4 @@
 'use strict';
-const category = require('../config/category')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Ads', {
@@ -25,7 +24,7 @@ module.exports = {
         type: Sequelize.FLOAT
       },
       category: {
-        type: Sequelize.ENUM(category)
+        type: Sequelize.STRING
       },
       city: {
         type: Sequelize.STRING

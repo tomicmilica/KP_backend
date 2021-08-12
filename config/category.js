@@ -1,7 +1,12 @@
 const category = [
+    "clothing",
     "toys",
-    "bicycles",
-    "clothes"
+    "sports",
+    "tools",
+    "pets",
+    "games",
+    "baby",
+    "technology",
 ]
 
 module.exports = category;

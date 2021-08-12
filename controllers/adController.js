@@ -18,6 +18,7 @@ router.get('/findAd', (req, res, next) => {
 router.get('/getAd/:id', (req, res, next) => {
     adService.getAd(req.param)
         .then(data => {
+            logger.info('get ad by id');
             res.status(200).json(data)
         })
         .catch(err => next(err));
