@@ -10,8 +10,8 @@ const auhenticateUser = async (data) => {
 
     if (!user) return Promise.reject(new Error(404, `Could not find user with e-mail ${data.username}!`));
 
-    if (!bcrypt.compare(data.password, user.password))
-        return response.json({ success: false, message: 'Passwords do not match' });
+    if (!bcrypt.compareSync(data.password, user.password))
+        return Promise.reject({ success: false, message: 'Passwords do not match' });
 
     const token = jwt.sign(
         { id: user.id, username: user.username },
@@ -24,6 +24,7 @@ const auhenticateUser = async (data) => {
         process.env.JWT_SECRET,
         { expiresIn: parseInt(process.env.JWT_EXPIRE) }
     );
+
     return Promise.resolve({
         user: user,
         token: token,

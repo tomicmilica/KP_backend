@@ -1,15 +1,12 @@
 const { User } = require('../models')
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 require('dotenv').config()
 
 
 const createUser = async (data) => {
-    console.log()
     return await User.create({
         username: data.username,
-        password: bcrypt.hash(data.password, 20, (err, hash) => {
-            hash.password
-        }),
+        password: bcrypt.hashSync(data.password, 10),
         dateOfRegistry: data.dateOfRegistry,
         phoneNumber: data.phoneNumber
     });

@@ -7,25 +7,27 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config()
 const logger = require('../utils/logger')
 
-router.post('/login', (req, res, next) => {
+router.post('/login', async (req, res, next) => {
     logger.info('login started ');
-    authService.auhenticateUser(req.body)
-        .then(data => {
-            logger.info('user logged in');
-            res.status(200).json(data)
-        })
-        .catch(err => next(err));
+    try {
+        const response = await authService.auhenticateUser(req.body)
+        logger.info('user logged in');
+        res.status(200).json(response)
+    } catch (error) {
+        next(error);
+    }
 })
 
 
-router.post("/register", (req, res, next) => {
+router.post("/register", async (req, res, next) => {
     logger.info('register started ');
-    userService.createUser(req.body)
-        .then(data => {
-            logger.info('user registered');
-            res.status(201).json(data)
-        })
-        .catch(err => next(err));
+    try {
+        const response = await userService.createUser(req.body)
+        logger.info('user registered');
+        res.status(201).json(response)
+    } catch (error) {
+        next(error);
+    }
 })
 
 const verifyJWT = (req, res, next) => {
@@ -47,20 +49,18 @@ const verifyJWT = (req, res, next) => {
 
 }
 
-router.get('/user', verifyJWT, (req, res, next) => {
-    return res.status(200).json("User is auth");
+router.get('/user', verifyJWT, async (req, res, next) => {
+    await res.status(200).json("User is auth");
 })
 
 
 router.post('/refresh', (req, res, next) => {
     const refreshToken = req.body.token;
-    console.log(refreshToken)
     if (!refreshToken) {
         res.send("You need a refresh token")
     }
     jwt.verify(refreshToken, process.env.JWT_SECRET, (err, user) => {
         if (err) {
-            console.log(err)
             return res.status(403).json("User is not auth REFRESH");
         } else {
             const acces_token = jwt.sign(
