@@ -1,5 +1,5 @@
 const { Ad } = require('../models')
-const { fn, sequelize, col } = require('sequelize');
+const { Op, sequelize, col, fn } = require('sequelize');
 const { param } = require('../routes');
 
 const createAd = async (data) => {
@@ -14,25 +14,19 @@ const createAd = async (data) => {
 }
 
 const findAd = async (data) => {
-
+    let query = {};
     if (data.category) {
-        return await Ad.findAll({
-            where: { category: data.category }
-
-        })
-    } else if (data.search) {
-        return await Ad.findAll({
-            where: { name: data.search }
-
-        })
+        query.category = data.category
+    } if (data.search) {
+        query.name = { [Op.like]: '%' + data.search + '%' }
     }
-    if (data.price) {
-        return await Ad.findAll({
-            where: { price: data.price }
-
-        })
+    if (data.price == 'max') {
+        query.price = fn('max', col('price'))
+        console.log(query.price)
+    } if (data.price === 'min') {
+        query.price = fn('min', col('price'))
     }
-    return await Ad.findAll(data);
+    return await Ad.findAll({ where: query });
 
 }
 
@@ -49,8 +43,9 @@ const getAd = async (data) => {
 
 const editAd = async (data) => {
     try {
-        const updateAd = await Ad.findOne(data.id);
-        return await Ad.update(updateAd, { where: { id: adId } });
+        //   const updateAd = await Ad.findOne(data.id);
+        return Ad.update(updateAd, { where: { id: data.id } });
+
     } catch (error) {
         return error;
     }

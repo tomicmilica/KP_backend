@@ -35,7 +35,7 @@ router.get('/getAd/:id', async (req, res, next) => {
 
 router.patch('/:id', async (req, res, next) => {
     try {
-        const response = adService.editAd(req.param)
+        const response = adService.editAd(req.body)
         res.status(200).json(response)
     } catch (error) {
         next(error);

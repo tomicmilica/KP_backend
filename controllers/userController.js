@@ -18,7 +18,6 @@ router.post('/login', async (req, res, next) => {
     }
 })
 
-
 router.post("/register", async (req, res, next) => {
     logger.info('register started ');
     try {
@@ -46,7 +45,6 @@ const verifyJWT = (req, res, next) => {
             }
         })
     }
-
 }
 
 router.get('/user', verifyJWT, async (req, res, next) => {
